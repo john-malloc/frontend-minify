@@ -16,6 +16,7 @@
 
 import sys
 from pathlib import Path
+import os
 
 excluded_files = []
 if len(sys.argv) > 1:
@@ -37,6 +38,7 @@ for file_path in files_path:
             found = True
     
     tmp = str(file_path).split(".")
+    new_file_path = tmp[0] + ".min." + tmp[1]
     file = open(file_path, "r")
     write_to_file = ""
     if not found:
@@ -51,6 +53,11 @@ for file_path in files_path:
             else:
                 write_to_file += line.replace("\n", "").replace("\t", "").replace("    ", "")
     file.close()
-    new_file = open(tmp[0] + ".min." + tmp[1], "w")
+    new_file = open(new_file_path, "w")
     new_file.write(write_to_file)
     new_file.close()
+
+    old_file_size = os.path.getsize(file_path) 
+    new_file_size = os.path.getsize(new_file_path)
+    print(str(old_file_size - new_file_size) + " bytes saved")
+    print("file size reduced by " + str(int((1 - (new_file_size / old_file_size)) * 100)) + "%")
