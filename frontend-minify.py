@@ -1,5 +1,5 @@
 # frontend-minify reduce the size of the files of frontend applications
-# Copyright (C) 2024  john-malloc
+# Copyright (C) 2024 john-malloc
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,26 +32,50 @@ for file_path in files_path:
     if "min" in str(file_path):
         continue
 
-    found = False
+    excluded = False
     for excluded_file in excluded_files:
         if excluded_file == str(file_path):
-            found = True
+            excluded = True
+            break
     
     tmp = str(file_path).split(".")
     new_file_path = tmp[0] + ".min." + tmp[1]
     file = open(file_path, "r")
     write_to_file = ""
-    if not found:
-        write_to_file = file.read().replace("\n", "").replace("\t", "").replace("    ", "")
-    else:
-        is_multiline_string = False
-        for line in file.readlines():
+
+    copy = True
+    for line in file.readlines():
+        # HTML comment
+        if "<!--" in line and "-->" in line:
+            continue
+        if "<!--" in line:
+            copy = False
+        if "-->" in line:
+            copy = True
+        
+        # CSS comment or multiline JS comment
+        if "/*" in line and "*/" in line:
+            continue
+        if "<!--" in line:
+            copy = False
+        if "-->" in line:
+            copy = True
+
+        # single line JS comment
+        if "//" in line:
+            continue
+
+        # if file is not --exclude-extreme and 
+        # is in multiline string, copy without minify
+        if excluded:
             if "`" in line:
-                is_multiline_string = not is_multiline_string
-            if is_multiline_string:
+                copy = not copy
+            if not copy:
                 write_to_file += line
-            else:
-                write_to_file += line.replace("\n", "").replace("\t", "").replace("    ", "")
+
+        if copy:
+            write_to_file += line.replace("\n", "").replace("\t", "").replace("    ", "")
+            
     file.close()
     new_file = open(new_file_path, "w")
     new_file.write(write_to_file)
