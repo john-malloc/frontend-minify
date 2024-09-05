@@ -39,6 +39,17 @@ def get_params():
 
     return(excluded_files, excluded_licenses)
 
+def handle_multiline_string(can_minify):
+    write_to_file = ""
+    # if file is not --exclude-extreme and 
+    # is in multiline string, copy without minify
+    if excluded_file_bool:
+        if "`" in line:
+            can_minify = not can_minify
+        if not can_minify:
+            write_to_file += line
+    return (can_minify, write_to_file)
+
 excluded_files, excluded_licenses = get_params()
 
 files_path = []
@@ -93,13 +104,8 @@ for file_path in files_path:
         if "//" in line:
             continue
 
-        # if file is not --exclude-extreme and 
-        # is in multiline string, copy without minify
-        if excluded_file_bool:
-            if "`" in line:
-                copy = not copy
-            if not copy:
-                write_to_file += line
+        copy, tmp = handle_multiline_string(copy)
+        write_to_file += tmp
 
         if copy:
             write_to_file += line.replace("\n", "").replace("\t", "").replace("    ", "")

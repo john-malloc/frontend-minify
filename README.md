@@ -20,15 +20,15 @@ By default an extreme minification will be applied, it is the best choice if you
 ```
 python3 frontend-minify.py \
 --exclude-extreme \
-/path/to/file1 /path/to/file2
+path/to/file1 path/to/file2
 ```
 ### If you have a license at the top of the file and you want to maintain it run 
 
 ```
 python3 frontend-minify.py \
 --exclude-license \
-/path/to/file1 number_of_line_to_exclude_in_file1 \
-/path/to/file2 number_of_line_to_exclude_in_file2
+path/to/file1 number_of_line_to_exclude_in_file1 \
+path/to/file2 number_of_line_to_exclude_in_file2
 ```
 
 ### You can combine --exclude-extreme and --exclude-license
@@ -36,9 +36,9 @@ python3 frontend-minify.py \
 ```
 python3 frontend-minify.py \
 --exclude-license \
-/path/to/file1 number_of_line_to_exclude_in_file1 \
+path/to/file1 number_of_line_to_exclude_in_file1 \
 --exclude-extreme \
-/path/to/file2
+path/to/file2
 ```
 
 or 
@@ -46,11 +46,25 @@ or
 ```
 python3 frontend-minify.py 
 --exclude-extreme \
-/path/to/file2 \
+path/to/file2 \
 --exclude-license \
-/path/to/file1 number_of_line_to_exclude_in_file1 \
+path/to/file1 number_of_line_to_exclude_in_file1 \
 ```
 
 ## Contribution
 
 Contributions and feedback are welcome.
+
+### Convention to commit
+
+* feat: feature
+
+* fix: bug fixes
+
+* docs: changes to the documentation
+
+* style: style or formatting change 
+
+* perf: improves code performance
+
+* test: test a feature
