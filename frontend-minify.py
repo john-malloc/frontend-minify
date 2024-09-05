@@ -18,10 +18,28 @@ import sys
 from pathlib import Path
 import os
 
-excluded_files = []
-if len(sys.argv) > 1:
-    if sys.argv[1] == "--exclude-extreme":
-        excluded_files = sys.argv[2:]
+def get_params():
+    excluded_files = []
+    excluded_licenses = []
+    exclude_license_start = 0
+    exclude_extreme_start = 0
+
+    for i, arg in enumerate(sys.argv):
+        if arg == "--exclude-license":
+            exclude_license_start = i
+        if arg == "--exclude-extreme":
+            exclude_extreme_start = i
+    
+    if exclude_license_start > exclude_extreme_start:
+        excluded_files = sys.argv[exclude_extreme_start + 1: exclude_license_start]
+        excluded_licenses = sys.argv[exclude_license_start + 1: len(sys.argv)]
+    if exclude_license_start <= exclude_extreme_start:
+        excluded_licenses = sys.argv[exclude_license_start + 1: exclude_extreme_start]
+        excluded_files = sys.argv[exclude_extreme_start + 1: len(sys.argv)]
+
+    return(excluded_files, excluded_licenses)
+
+excluded_files, excluded_licenses = get_params()
 
 files_path = []
 files_path.extend(list(Path(".").rglob("**/*.[hH][tT][mM][lL]")))
@@ -32,19 +50,29 @@ for file_path in files_path:
     if "min" in str(file_path):
         continue
 
-    excluded = False
+    excluded_file_bool = False
     for excluded_file in excluded_files:
         if excluded_file == str(file_path):
-            excluded = True
+            excluded_file_bool = True
             break
     
+    license_lines_to_skip = 0
+    for i in range(0, len(excluded_licenses), 2):
+        if excluded_licenses[i] == str(file_path):
+            license_lines_to_skip = int(excluded_licenses[i + 1])
+            break
+
     tmp = str(file_path).split(".")
     new_file_path = tmp[0] + ".min." + tmp[1]
     file = open(file_path, "r")
     write_to_file = ""
 
     copy = True
-    for line in file.readlines():
+    for i, line in enumerate(file):
+        if i + 1 <= license_lines_to_skip:
+            write_to_file += line
+            continue
+
         # HTML comment
         if "<!--" in line and "-->" in line:
             continue
@@ -67,7 +95,7 @@ for file_path in files_path:
 
         # if file is not --exclude-extreme and 
         # is in multiline string, copy without minify
-        if excluded:
+        if excluded_file_bool:
             if "`" in line:
                 copy = not copy
             if not copy:

@@ -6,12 +6,52 @@
 
 ## How to use
 
-Run `python3 frontend-minify.py` in the root directory of your project.
+### Run in the root directory of your project.
+
+```
+python3 frontend-minify.py
+```
 
 It will recursively minify all of the html, css and js files.
 By default an extreme minification will be applied, it is the best choice if you do not have multiline strings that should not be formatted.
 
-If you have files that contains multiline strings that should not be formatted run `python3 frontend-minify.py --exclude-extreme /path/to/file1 /path/to/file2`.
+### If you have files that contains multiline strings that should not be formatted run 
+
+```
+python3 frontend-minify.py \
+--exclude-extreme \
+/path/to/file1 /path/to/file2
+```
+### If you have a license at the top of the file and you want to maintain it run 
+
+```
+python3 frontend-minify.py \
+--exclude-license \
+/path/to/file1 number_of_line_to_exclude_in_file1 \
+/path/to/file2 number_of_line_to_exclude_in_file2
+```
+
+### You can combine --exclude-extreme and --exclude-license
+
+```
+python3 frontend-minify.py \
+--exclude-license \
+/path/to/file1 number_of_line_to_exclude_in_file1 \
+--exclude-extreme \
+/path/to/file2
+
+```
+
+or 
+
+```
+python3 frontend-minify.py 
+--exclude-extreme \
+/path/to/file2 \
+--exclude-license \
+/path/to/file1 number_of_line_to_exclude_in_file1 \
+
+```
 
 ## Contribution
 
