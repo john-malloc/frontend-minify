@@ -39,7 +39,6 @@ python3 frontend-minify.py \
 /path/to/file1 number_of_line_to_exclude_in_file1 \
 --exclude-extreme \
 /path/to/file2
-
 ```
 
 or 
@@ -50,7 +49,6 @@ python3 frontend-minify.py
 /path/to/file2 \
 --exclude-license \
 /path/to/file1 number_of_line_to_exclude_in_file1 \
-
 ```
 
 ## Contribution
