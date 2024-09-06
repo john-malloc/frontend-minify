@@ -18,6 +18,7 @@ import sys
 from pathlib import Path
 import os
 
+
 def get_params():
     excluded_files = []
     excluded_licenses = []
@@ -29,26 +30,16 @@ def get_params():
             exclude_license_start = i
         if arg == "--exclude-extreme":
             exclude_extreme_start = i
-    
+
     if exclude_license_start > exclude_extreme_start:
-        excluded_files = sys.argv[exclude_extreme_start + 1: exclude_license_start]
-        excluded_licenses = sys.argv[exclude_license_start + 1: len(sys.argv)]
+        excluded_files = sys.argv[exclude_extreme_start + 1 : exclude_license_start]
+        excluded_licenses = sys.argv[exclude_license_start + 1 : len(sys.argv)]
     if exclude_license_start <= exclude_extreme_start:
-        excluded_licenses = sys.argv[exclude_license_start + 1: exclude_extreme_start]
-        excluded_files = sys.argv[exclude_extreme_start + 1: len(sys.argv)]
+        excluded_licenses = sys.argv[exclude_license_start + 1 : exclude_extreme_start]
+        excluded_files = sys.argv[exclude_extreme_start + 1 : len(sys.argv)]
 
-    return(excluded_files, excluded_licenses)
+    return (excluded_files, excluded_licenses)
 
-def handle_multiline_string(can_minify):
-    write_to_file = ""
-    # if file is not --exclude-extreme and 
-    # is in multiline string, copy without minify
-    if excluded_file_bool:
-        if "`" in line:
-            can_minify = not can_minify
-        if not can_minify:
-            write_to_file += line
-    return (can_minify, write_to_file)
 
 excluded_files, excluded_licenses = get_params()
 
@@ -66,7 +57,7 @@ for file_path in files_path:
         if excluded_file == str(file_path):
             excluded_file_bool = True
             break
-    
+
     license_lines_to_skip = 0
     for i in range(0, len(excluded_licenses), 2):
         if excluded_licenses[i] == str(file_path):
@@ -91,31 +82,37 @@ for file_path in files_path:
             copy = False
         if "-->" in line:
             copy = True
-        
-        # CSS comment or multiline JS comment
+
+        # CSS / JS comment
         if "/*" in line and "*/" in line:
             continue
-        if "<!--" in line:
+        if "/*" in line:
             copy = False
-        if "-->" in line:
+        if "*/" in line:
             copy = True
-
-        # single line JS comment
         if "//" in line:
             continue
 
-        copy, tmp = handle_multiline_string(copy)
-        write_to_file += tmp
+        if excluded_file_bool and "`" in line:
+            copy = not copy
 
         if copy:
-            write_to_file += line.replace("\n", "").replace("\t", "").replace("    ", "")
-            
+            write_to_file += (
+                line.replace("\n", "").replace("\t", "").replace("    ", "")
+            )
+        if not copy:
+            write_to_file += line
+
     file.close()
     new_file = open(new_file_path, "w")
     new_file.write(write_to_file)
     new_file.close()
 
-    old_file_size = os.path.getsize(file_path) 
+    old_file_size = os.path.getsize(file_path)
     new_file_size = os.path.getsize(new_file_path)
     print(str(old_file_size - new_file_size) + " bytes saved")
-    print("file size reduced by " + str(int((1 - (new_file_size / old_file_size)) * 100)) + "%")
+    print(
+        "file size reduced by "
+        + str(int((1 - (new_file_size / old_file_size)) * 100))
+        + "%"
+    )
