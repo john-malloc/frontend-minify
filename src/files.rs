@@ -17,9 +17,10 @@
  */
 pub fn get_files() -> Vec<std::path::PathBuf> {
     let mut vec: Vec<std::path::PathBuf> = Vec::new();
-    let html = &Some(std::ffi::OsStr::new("html"));
-    let css = &Some(std::ffi::OsStr::new("css"));
-    let js = &Some(std::ffi::OsStr::new("js"));
+    let html: &Option<&std::ffi::OsStr> = &Some(std::ffi::OsStr::new("html"));
+    let css: &Option<&std::ffi::OsStr> = &Some(std::ffi::OsStr::new("css"));
+    let js: &Option<&std::ffi::OsStr> = &Some(std::ffi::OsStr::new("js"));
+
     for element in walkdir::WalkDir::new(".") {
         let path: std::path::PathBuf = match element {
             Ok(e) => e.into_path(),
