@@ -22,7 +22,9 @@ mod minify;
 async fn main() {
     let tasks: Vec<tokio::task::JoinHandle<()>> = files::get_files()
         .into_iter()
-        .map(|file_path| tokio::task::spawn(minify::minify(file_path)))
+        .map(|file_path: std::path::PathBuf| {
+            tokio::task::spawn(minify::minify(file_path, false, 0))
+        })
         .collect();
     for task in tasks {
         match task.await {
