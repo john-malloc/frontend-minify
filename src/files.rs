@@ -15,28 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-pub fn get_files() -> Vec<String> {
-    let mut vec: Vec<String> = Vec::new();
+pub fn get_files() -> Vec<std::path::PathBuf> {
+    let mut vec: Vec<std::path::PathBuf> = Vec::new();
+    let html = &Some(std::ffi::OsStr::new("html"));
+    let css = &Some(std::ffi::OsStr::new("css"));
+    let js = &Some(std::ffi::OsStr::new("js"));
     for element in walkdir::WalkDir::new(".") {
-        let entry: walkdir::DirEntry = match element {
-            Ok(e) => e,
+        let path: std::path::PathBuf = match element {
+            Ok(e) => e.into_path(),
             Err(err) => panic!("Failed on reading files -> {}", err),
         };
-        let file_name: String = entry
-            .path()
-            .file_name()
-            .and_then(std::ffi::OsStr::to_str)
-            .unwrap_or("")
-            .to_owned();
-        if file_name.ends_with("min.html")
-            || file_name.ends_with("min.css")
-            || file_name.ends_with("min.js")
-            || !file_name.contains(".")
-        {
+        if path.to_str().unwrap_or("").contains("min") {
             continue;
         }
-        if file_name.ends_with("html") || file_name.ends_with("css") || file_name.ends_with("js") {
-            vec.push(file_name);
+        if path.extension().eq(html) || path.extension().eq(css) || path.extension().eq(js) {
+            vec.push(path.to_owned());
         }
     }
     return vec;

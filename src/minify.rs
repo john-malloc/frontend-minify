@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-pub async fn minify(item: String) {
-    println!("item -> {}", item);
+pub async fn minify(item: std::path::PathBuf) {
+    for line in std::fs::read_to_string(item.as_path()).unwrap().lines() {
+        println!("line -> {}", line);
+    }
 }
