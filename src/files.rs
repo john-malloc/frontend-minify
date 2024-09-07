@@ -15,40 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-fn cout_files() -> usize {
-    let mut i: usize = 0;
-    for element in walkdir::WalkDir::new(".") {
-        let entry = match element {
-            Ok(e) => e,
-            Err(err) => panic!("Failed on reading files -> {}", err),
-        };
-        let file_name = entry
-            .path()
-            .file_name()
-            .and_then(std::ffi::OsStr::to_str)
-            .unwrap_or("");
-        if !file_name.contains(".")
-            || file_name.ends_with("min.html")
-            || file_name.ends_with("min.css")
-            || file_name.ends_with("min.js")
-        {
-            continue;
-        }
-        if file_name.ends_with("html") || file_name.ends_with("css") || file_name.ends_with("js") {
-            i += 1;
-        }
-    }
-    return i;
-}
-
 pub fn get_files() -> Vec<String> {
-    let mut vec = vec![String::new(); cout_files()];
+    let mut vec: Vec<String> = Vec::new();
     for element in walkdir::WalkDir::new(".") {
-        let entry = match element {
+        let entry: walkdir::DirEntry = match element {
             Ok(e) => e,
             Err(err) => panic!("Failed on reading files -> {}", err),
         };
-        let file_name = entry
+        let file_name: String = entry
             .path()
             .file_name()
             .and_then(std::ffi::OsStr::to_str)

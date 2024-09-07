@@ -15,19 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-mod files;
-mod minify;
-
-#[tokio::main]
-async fn main() {
-    let tasks: Vec<tokio::task::JoinHandle<()>> = files::get_files()
-        .into_iter()
-        .map(|file_name| tokio::task::spawn(minify::minify(file_name)))
-        .collect();
-    for task in tasks {
-        match task.await {
-            Ok(_) => (),
-            Err(err) => panic!("Failed on join thread -> {}", err),
-        };
-    }
+pub async fn minify(item: String) {
+    println!("item -> {}", item);
 }
