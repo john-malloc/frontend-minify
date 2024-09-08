@@ -20,18 +20,21 @@ pub async fn minify(path: std::path::PathBuf, no_extreme: bool, license_lines: u
     let mut copy: bool = true;
     let file_name = "foo.min.js";
 
-    let file_content = match std::fs::read_to_string(path.as_path()) {
+    let file_content: String = match std::fs::read_to_string(path.as_path()) {
         Ok(f) => f,
         Err(err) => panic!("Failed on read file -> {}", err),
     };
 
-    for (i, line) in file_content.lines().enumerate() {
+    for (i, tmp_line) in file_content.lines().enumerate() {
+        // Line terminators are not included in the lines
+        // returned by the iterator ".lines()"
+        let mut line: String = tmp_line.to_string();
+        line.push_str("\n");
         // LICENSE LINES
         if i + 1 <= license_lines {
-            my_str.push_str(line);
+            my_str.push_str(&line);
             continue;
         }
-
         // HTML COMMENT
         if line.contains("<!--") && line.contains("-->") {
             continue;
@@ -42,7 +45,6 @@ pub async fn minify(path: std::path::PathBuf, no_extreme: bool, license_lines: u
         if line.contains("-->") {
             copy = false;
         }
-
         // CSS / JS COMMENT
         if line.contains("/*") && line.contains("*/") {
             continue;
@@ -56,15 +58,15 @@ pub async fn minify(path: std::path::PathBuf, no_extreme: bool, license_lines: u
         if line.contains("//") {
             continue;
         }
-
+        // multi line string
         if no_extreme && line.contains("`") {
+            print!("{}", line);
             copy = !copy;
         }
-
         if copy {
-            my_str.push_str(&line.replace("\n", "").replace("\t", "").replace("    ", ""));
+            my_str.push_str(&line.replace("\t", "").replace("    ", ""));
         } else {
-            my_str.push_str(line);
+            my_str.push_str(&line);
         }
     }
 
