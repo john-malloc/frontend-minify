@@ -18,7 +18,15 @@
 pub async fn minify(path: std::path::PathBuf, no_extreme: bool, license_lines: usize) {
     let mut my_str: String = String::new();
     let mut copy: bool = true;
-    let file_name = "foo.min.js";
+    let mut file_name: String = match path.to_str() {
+        Some(nfn) => nfn.to_string(),
+        None => panic!("Failed on file name conveersion"),
+    };
+    let dot_idx: usize = match file_name.rfind(".") {
+        Some(idx) => idx,
+        None => panic!("Failed on file has no extention"),
+    };
+    file_name.insert_str(dot_idx, ".min");
 
     let file_content: String = match std::fs::read_to_string(path.as_path()) {
         Ok(f) => f,
@@ -29,9 +37,9 @@ pub async fn minify(path: std::path::PathBuf, no_extreme: bool, license_lines: u
         // Line terminators are not included in the lines
         // returned by the iterator ".lines()"
         let mut line: String = tmp_line.to_string();
-        line.push_str("\n");
         // LICENSE LINES
         if i + 1 <= license_lines {
+            line.push_str("\n");
             my_str.push_str(&line);
             continue;
         }
@@ -60,12 +68,12 @@ pub async fn minify(path: std::path::PathBuf, no_extreme: bool, license_lines: u
         }
         // multi line string
         if no_extreme && line.contains("`") {
-            print!("{}", line);
             copy = !copy;
         }
         if copy {
             my_str.push_str(&line.replace("\t", "").replace("    ", ""));
         } else {
+            line.push_str("\n");
             my_str.push_str(&line);
         }
     }
