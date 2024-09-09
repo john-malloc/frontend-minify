@@ -32,7 +32,6 @@ fn new_file_name(path: &std::path::PathBuf) -> String {
     };
     file_name.insert_str(slash_idx, "/build");
 
-    println!("{}", file_name);
     let dot_idx: usize = match file_name.rfind(".") {
         Some(idx) => idx,
         None => panic!("Failed on file has no extention"),
