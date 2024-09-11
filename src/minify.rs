@@ -18,7 +18,27 @@ use std::path::Path;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 fn new_file_name(path: &String) -> String {
-    return "foo.min.js".to_string();
+    let _ = std::fs::create_dir("./build");
+    // match std::fs::create_dir("./build") {
+    //     Ok(_) => (),
+    //     Err(err) => panic!("Failed on create build directory -> {}", err),
+    // };
+
+    let mut file_name: String = path.to_string();
+
+    let slash_idx: usize = match path.find("/") {
+        Some(idx) => idx,
+        None => panic!("Failed on file has no slash"),
+    };
+    file_name.insert_str(slash_idx, "/build");
+
+    let dot_idx: usize = match file_name.rfind(".") {
+        Some(idx) => idx,
+        None => panic!("Failed on file has no extention"),
+    };
+    file_name.insert_str(dot_idx, ".min");
+
+    return file_name;
 }
 
 pub async fn minify(path: String, no_extreme: bool, license_lines: usize) {
