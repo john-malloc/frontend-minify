@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-pub fn get_files() -> Vec<std::path::PathBuf> {
-    let mut vec: Vec<std::path::PathBuf> = Vec::new();
+pub fn get_files() -> Vec<String> {
+    let mut vec: Vec<String> = Vec::new();
     let html: &Option<&std::ffi::OsStr> = &Some(std::ffi::OsStr::new("html"));
     let css: &Option<&std::ffi::OsStr> = &Some(std::ffi::OsStr::new("css"));
     let js: &Option<&std::ffi::OsStr> = &Some(std::ffi::OsStr::new("js"));
@@ -30,8 +30,9 @@ pub fn get_files() -> Vec<std::path::PathBuf> {
             continue;
         }
         if path.extension().eq(html) || path.extension().eq(css) || path.extension().eq(js) {
-            vec.push(path.to_owned());
+            vec.push(path.into_os_string().into_string().unwrap());
         }
     }
+
     return vec;
 }

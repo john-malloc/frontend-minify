@@ -15,9 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#[derive(Clone)]
+pub struct LicenseCmd {
+    pub file_name: String,
+    pub num_line: usize,
+}
+
 pub struct CmdArgs {
-    no_extreme: Vec<String>,
-    license_lines: Vec<String>,
+    pub no_extreme: Vec<String>,
+    pub license_lines: Vec<LicenseCmd>,
 }
 
 pub fn cmd() -> CmdArgs {
@@ -41,17 +47,25 @@ pub fn cmd() -> CmdArgs {
 
     let mut no_ext: Vec<String> = Vec::new();
     let no_ext_val_ref: clap::parser::ValuesRef<'_, String> =
-        cmd.get_many::<String>("no_extreme").unwrap();
+        cmd.get_many::<String>("no_extreme").unwrap_or_default();
     for x in no_ext_val_ref {
         no_ext.push(x.to_string());
     }
 
-    // TODO
-    let mut lic_lin: Vec<String> = Vec::new();
+    let mut lic_lin: Vec<LicenseCmd> = Vec::new();
     let lic_lin_val_ref: clap::parser::ValuesRef<'_, String> =
-        cmd.get_many::<String>("license_lines").unwrap();
-    for x in lic_lin_val_ref {
-        lic_lin.push(x.to_string());
+        cmd.get_many::<String>("license_lines").unwrap_or_default();
+    let mut tmp = LicenseCmd {
+        file_name: String::new(),
+        num_line: 0,
+    };
+    for (i, x) in lic_lin_val_ref.enumerate() {
+        if i % 2 == 0 {
+            tmp.file_name = x.to_string();
+        } else {
+            tmp.num_line = x.trim().parse().expect("Failed on casting");
+            lic_lin.push(tmp.clone());
+        }
     }
 
     return CmdArgs {

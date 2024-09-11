@@ -1,3 +1,5 @@
+use std::path::Path;
+
 /**
  * frontend-minify reduce the size of the files of frontend applications
  * Copyright (C) 2024 john-malloc
@@ -15,37 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-fn new_file_name(path: &std::path::PathBuf) -> String {
-    match std::fs::create_dir("./build") {
-        Ok(_) => (),
-        Err(err) => panic!("Failed on create build directory -> {}", err),
-    };
-
-    let mut file_name: String = match path.to_str() {
-        Some(nfn) => nfn.to_string(),
-        None => panic!("Failed on file name conversion"),
-    };
-
-    let slash_idx: usize = match file_name.find("/") {
-        Some(idx) => idx,
-        None => panic!("Failed on file has no slash"),
-    };
-    file_name.insert_str(slash_idx, "/build");
-
-    let dot_idx: usize = match file_name.rfind(".") {
-        Some(idx) => idx,
-        None => panic!("Failed on file has no extention"),
-    };
-    file_name.insert_str(dot_idx, ".min");
-
-    return file_name;
+fn new_file_name(path: &String) -> String {
+    return "foo.min.js".to_string();
 }
 
-pub async fn minify(path: std::path::PathBuf, no_extreme: bool, license_lines: usize) {
+pub async fn minify(path: String, no_extreme: bool, license_lines: usize) {
     let mut my_str: String = String::new();
     let mut copy: bool = true;
-
-    let file_content: String = match std::fs::read_to_string(path.as_path()) {
+    let file_content: String = match std::fs::read_to_string(Path::new(&path)) {
         Ok(f) => f,
         Err(err) => panic!("Failed on read file -> {}", err),
     };
@@ -99,6 +78,7 @@ pub async fn minify(path: std::path::PathBuf, no_extreme: bool, license_lines: u
         Ok(f) => f,
         Err(err) => panic!("Failed on create new file -> {}", err),
     };
+
     match std::io::Write::write_all(&mut file, &my_str.as_bytes()) {
         Ok(_) => (),
         Err(err) => panic!("Failed on write to file -> {}", err),
