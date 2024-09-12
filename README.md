@@ -1,70 +1,52 @@
-# FRONTEND-MINIFY
+<h1>FRONTEND-MINIFY</h1>
 
-**Bandwith is not free**, minify what you ship to the user.
+<p><bold>Bandwith is not free<bold>, minify what you ship to the user.</p>
 
-1TB of bandwith on aws will cost you around 90$, on average extreme minification reduce your code size by 45%, this means saving 11.25kg of bell peppers (in italy 🇮🇹) or 40.5$ if do not count your money in bell peppers.
+<p>1TB of bandwith on aws will cost you around 90$, on average extreme minification reduce your code size by 45%, this means saving 11.25kg of bell peppers (in italy 🇮🇹) or 40.5$ if do not count your money in bell peppers.</p>
 
-## How to use
+<h2>HOW TO BUILD</h2>
 
-### Run in the root directory of your project.
+<h3>Run in the root directory of this project.</h3>
 
-```
-python3 frontend-minify.py
-```
+<code>cargo build --release</code>
 
-It will recursively minify all of the html, css and js files.
-By default an extreme minification will be applied, it is the best choice if you do not have multiline strings that should not be formatted.
+<h3>Then move the ./target/release/frontend-minify binary in the root of your project</h3>
 
-### If you have files that contains multiline strings that should not be formatted run 
+<h2>HOW TO USE</h2>
 
-```
-python3 frontend-minify.py \
---exclude-extreme \
-path/to/file1 path/to/file2
-```
-### If you have a license at the top of the file and you want to maintain it run 
+<h3>Run in the root directory of your project.</h3>
 
-```
-python3 frontend-minify.py \
---exclude-license \
-path/to/file1 number_of_line_to_exclude_in_file1 \
-path/to/file2 number_of_line_to_exclude_in_file2
-```
+<code>./frontend-minify</code>
 
-### You can combine --exclude-extreme and --exclude-license
+<table>
+  <tr>
+    <th>Flag</th>
+    <th>Parameters</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>--exclude-extreme</td>
+    <td>path/to/file1 <br> path/to/file2</td>
+    <td>for files that contains multiline strings that should not be formatted run</td>
+  </tr>
+  <tr>
+    <td>--exclude-license</td>
+    <td>path/to/file1 lines_to_skip_file1 <br> path/to/file2 lines_to_skip_file</td>
+    <td>for files that have a license at the top that you want to maintain</td>
+  </tr>
+</table> 
 
-```
-python3 frontend-minify.py \
---exclude-license \
-path/to/file1 number_of_line_to_exclude_in_file1 \
---exclude-extreme \
-path/to/file2
-```
+<h2>Contribution</h2>
 
-or 
+<p>Contributions and feedback are welcome.</p>
 
-```
-python3 frontend-minify.py 
---exclude-extreme \
-path/to/file2 \
---exclude-license \
-path/to/file1 number_of_line_to_exclude_in_file1 \
-```
+<h3>Convention to commit</h3>
 
-## Contribution
-
-Contributions and feedback are welcome.
-
-### Convention to commit
-
-* feat: feature
-
-* fix: bug fixes
-
-* docs: changes to the documentation
-
-* style: style or formatting change 
-
-* perf: improves code performance
-
-* test: test a feature
+<ul>
+  <li>feat: feature</li><br>
+  <li>fix: bug fixes</li><br>
+  <li>docs: changes to the documentation</li><br>
+  <li>style: style or formatting change</li><br>
+  <li>perf: improves code performance</li><br>
+  <li>test: test a feature</li><br>
+</ul>
