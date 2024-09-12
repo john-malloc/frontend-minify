@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#![allow(clippy::style)]
-#[warn(clippy::return_self_not_must_use)]
 mod cmd;
 mod files;
 mod minify;

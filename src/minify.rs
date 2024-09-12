@@ -52,7 +52,7 @@ pub async fn minify(path: String, no_extreme: bool, license_lines: usize) {
         let mut line: String = tmp_line.to_string();
         // LICENSE LINES
         if i < license_lines {
-            line.push_str("\n");
+            line.push('\n');
             my_str.push_str(&line);
             continue;
         }
@@ -86,7 +86,7 @@ pub async fn minify(path: String, no_extreme: bool, license_lines: usize) {
         if copy {
             my_str.push_str(&line.replace("\t", "").replace("    ", ""));
         } else {
-            line.push_str("\n");
+            line.push('\n');
             my_str.push_str(&line);
         }
     }
@@ -96,7 +96,7 @@ pub async fn minify(path: String, no_extreme: bool, license_lines: usize) {
         Err(err) => panic!("Failed on create new file -> {}", err),
     };
 
-    match std::io::Write::write_all(&mut file, &my_str.as_bytes()) {
+    match std::io::Write::write_all(&mut file, my_str.as_bytes()) {
         Ok(_) => (),
         Err(err) => panic!("Failed on write to file -> {}", err),
     }

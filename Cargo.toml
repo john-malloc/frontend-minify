@@ -7,3 +7,6 @@ edition = "2021"
 clap = { version = "4.5.17", features = ["cargo"] }
 tokio = { version = "1.40.0", features = ["full"] }
 walkdir = "2.5.0"
+
+[lints.clippy]
+needless_return = "allow"
