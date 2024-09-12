@@ -26,22 +26,20 @@ pub struct CmdArgs {
 }
 
 pub fn cmd() -> CmdArgs {
+    let no_extreme = clap::Arg::new("no_extreme")
+        .num_args(1..)
+        .long("no-extreme")
+        .aliases(["noextreme"])
+        .help("no-extreme help");
+    let license_lines = clap::Arg::new("license_lines")
+        .num_args(1..)
+        .long("license-lines")
+        .aliases(["licenselines"])
+        .help("license-lines help");
     let cmd = clap::command!()
         .about("about")
-        .arg(
-            clap::Arg::new("no_extreme")
-                .num_args(1..)
-                .long("no-extreme")
-                .aliases(["noextreme"])
-                .help("no-extreme help"),
-        )
-        .arg(
-            clap::Arg::new("license_lines")
-                .num_args(1..)
-                .long("license-lines")
-                .aliases(["licenselines"])
-                .help("license-lines help"),
-        )
+        .arg(no_extreme)
+        .arg(license_lines)
         .get_matches();
 
     let mut no_ext: Vec<String> = Vec::new();
