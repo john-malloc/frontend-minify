@@ -1,22 +1,19 @@
-use std::path::Path;
+// frontend-minify reduce the size of the files of frontend applications
+// Copyright (C) 2024 john-malloc
 
-/**
- * frontend-minify reduce the size of the files of frontend applications
- * Copyright (C) 2024 john-malloc
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 fn new_file_name(path: &String) -> String {
     let _ = std::fs::create_dir("./build");
     // match std::fs::create_dir("./build") {
@@ -44,7 +41,7 @@ fn new_file_name(path: &String) -> String {
 pub async fn minify(path: String, no_extreme: bool, license_lines: usize) {
     let mut my_str: String = String::new();
     let mut copy: bool = true;
-    let file_content: String = match std::fs::read_to_string(Path::new(&path)) {
+    let file_content: String = match std::fs::read_to_string(std::path::Path::new(&path)) {
         Ok(f) => f,
         Err(err) => panic!("Failed on read file -> {}", err),
     };
@@ -54,7 +51,7 @@ pub async fn minify(path: String, no_extreme: bool, license_lines: usize) {
         // returned by the iterator ".lines()"
         let mut line: String = tmp_line.to_string();
         // LICENSE LINES
-        if i + 1 <= license_lines {
+        if i < license_lines {
             line.push_str("\n");
             my_str.push_str(&line);
             continue;
